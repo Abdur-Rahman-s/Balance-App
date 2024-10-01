@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import eye icons from react-icons
 import Crypto from "../assets/Crypto.jpg";
 
 export function Registration({ registration }) {
@@ -8,6 +9,8 @@ export function Registration({ registration }) {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
+    const [password, setPassword] = useState(''); // State for password
+    const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
     const [error, setError] = useState('');
 
     function handleNameChange(event) {
@@ -26,29 +29,37 @@ export function Registration({ registration }) {
         }
     }
 
+    function handlePasswordChange(event) {
+        setPassword(event.target.value);
+    }
+
+    function togglePasswordVisibility() {
+        setShowPassword(!showPassword);
+    }
+
     function handleInput(event) {
         event.preventDefault();
         const totalLength = phoneNumber.length + countryCode.length;
-    
+
         if (totalLength < 12 || totalLength > 14) {
             setError('Number is not valid. Total length should be between 12 and 14 digits.');
             return;
         }
-    
+
         const validPhone = countryCode + phoneNumber;
-        registration(name, email, validPhone);
-    
+        registration(name, email, validPhone, password);
+
         // Reset form fields after registration
         setCountryCode('+880');
         setName('');
         setEmail('');
         setPhoneNumber('');
+        setPassword('');
         setError('');
-    
+
         // Navigate to the home page after registration
         navigate('/home'); // This should now correctly navigate to the home route
     }
-    
 
     const handleCountryChange = (e) => {
         setCountryCode(e.target.value);
@@ -125,7 +136,24 @@ export function Registration({ registration }) {
                         />
                     </div>
                 </div>
-                <button  type="submit" className='h-10 w-[300px] mt-5 bg-gradient-to-r from-[#320F6C] to-[#FF6826] rounded-lg text-[#fff] transition-all duration-300 hover:shadow-2xl hover:scale-105 hover:from-[#FF6826] hover:to-[#320F6C] focus:ring-2 focus:ring-[#FF6826]'>
+
+                <div className="relative mt-2">
+                    <label htmlFor="Password" className='block text-[#20B283] font-semibold mt-2'>Password :</label>
+                    <input
+                        type={showPassword ? "text" : "password"}
+                        id="Password"
+                        className='w-[300px] h-10 border-none outline-none cursor-pointer pl-3 rounded-lg transition-all duration-300 hover:shadow-lg hover:scale-105 focus:ring-2 focus:ring-[#FF6826] bg-white/70'
+                        placeholder='Enter Password'
+                        required
+                        value={password}
+                        onChange={handlePasswordChange}
+                    />
+                    <span onClick={togglePasswordVisibility} className="absolute right-4 top-[50%] transform translate-y-1 cursor-pointer text-[#20B283]">
+                        {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    </span>
+                </div>
+
+                <button type="submit" className='h-10 w-[300px] mt-5 bg-gradient-to-r from-[#320F6C] to-[#FF6826] rounded-lg text-[#fff] transition-all duration-300 hover:shadow-2xl hover:scale-105 hover:from-[#FF6826] hover:to-[#320F6C] focus:ring-2 focus:ring-[#FF6826]'>
                     Sign up
                 </button>
             </form>

@@ -46,7 +46,7 @@ const CardSection = ({ balance, cardNum, spend }) => (
                     <p className="text-sm">My balance</p>
                     <h1 className="text-xl font-bold">${balance.toFixed(2)}</h1>
                 </div>
-                <p className="text-lg tracking-wide">{cardNum}</p>
+                <p className="text-md tracking-wide">{cardNum}</p>
             </div>
             <div className="flex text-center gap-20 pt-3 items-center text-white">
                 <div>
