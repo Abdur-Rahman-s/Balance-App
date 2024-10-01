@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import the useNavigate hook
+import { useNavigate } from 'react-router-dom';
+import { format } from 'date-fns'; // Import date-fns for date formatting
 
 function History({ addbalance, cashotHist, wtxn, time, addTime, addTXN, addDate }) {
     const [addList, setAddList] = useState([]);
     const [wList, setWList] = useState([]);
-
-    const navigate = useNavigate();
-
     const [allAddHistory, setAllAddHistory] = useState([]);
     const [allWHistory, setAllWHistory] = useState([]);
+    const navigate = useNavigate();
 
     // Handle add money transactions
     useEffect(() => {
@@ -20,14 +19,12 @@ function History({ addbalance, cashotHist, wtxn, time, addTime, addTXN, addDate 
                 addDate: addDate,
             };
 
-            // Update both addList and allAddHistory
+            // Update addList and history only if transaction is unique
             setAddList((prevList) => {
-                const isDuplicate = prevList.some(
-                    (item) => item.AddTXN === newTransaction.AddTXN
-                );
+                const isDuplicate = prevList.some(item => item.AddTXN === newTransaction.AddTXN);
                 if (!isDuplicate) {
                     const updatedAddList = [newTransaction, ...prevList];
-                    setAllAddHistory((prevHistory) => [newTransaction, ...prevHistory]); // Keep history
+                    setAllAddHistory((prevHistory) => [newTransaction, ...prevHistory]);
                     return updatedAddList;
                 }
                 return prevList;
@@ -45,14 +42,12 @@ function History({ addbalance, cashotHist, wtxn, time, addTime, addTXN, addDate 
                 withdrawDate: addDate,
             };
 
-            // Update both wList and allWHistory
+            // Update wList and history only if transaction is unique
             setWList((prevList) => {
-                const isDuplicate = prevList.some(
-                    (item) => item.wtxn === newTransaction.wtxn
-                );
+                const isDuplicate = prevList.some(item => item.wtxn === newTransaction.wtxn);
                 if (!isDuplicate) {
                     const updatedWList = [newTransaction, ...prevList];
-                    setAllWHistory((prevHistory) => [newTransaction, ...prevHistory]); // Keep history
+                    setAllWHistory((prevHistory) => [newTransaction, ...prevHistory]);
                     return updatedWList;
                 }
                 return prevList;
@@ -62,8 +57,7 @@ function History({ addbalance, cashotHist, wtxn, time, addTime, addTXN, addDate 
 
     return (
         <div className="h-[96vh] md:h-[85vh] w-[360px] rounded-3xl flex flex-col bg-[#2D2A3D] shadow-lg p-4">
-
-            <div className=" translate-x-2 translate-y-2 ">
+            <div className="translate-x-2 translate-y-2">
                 <button onClick={() => navigate('/home')} className="text-white text-4xl">
                     <span className="material-symbols-outlined">arrow_back</span>
                 </button>
@@ -81,7 +75,7 @@ function History({ addbalance, cashotHist, wtxn, time, addTime, addTXN, addDate 
                                 <div className="flex flex-col">
                                     <span className="text-lg font-bold text-[#76FF03]">Amount: +${addMHistory.amount}</span>
                                     <span className="text-sm text-gray-200">Transaction: {addMHistory.AddTXN}</span>
-                                    <span className="text-sm text-gray-300">Date: {addMHistory.addDate}</span>
+                                    <span className="text-sm text-gray-300">Date: {format(new Date(addMHistory.addDate), 'dd/MM/yyyy')}</span>
                                     <span className="text-sm text-gray-300">Time: {addMHistory.AddTime}</span>
                                 </div>
                             </li>
@@ -101,7 +95,7 @@ function History({ addbalance, cashotHist, wtxn, time, addTime, addTXN, addDate 
                                 <div className="flex flex-col">
                                     <span className="text-lg font-bold text-[#FF3D00]">Withdraw: -${transaction.amount}</span>
                                     <span className="text-sm text-gray-200">Transaction: {transaction.wtxn}</span>
-                                    <span className="text-sm text-gray-200">Date: {transaction.withdrawDate}</span>
+                                    <span className="text-sm text-gray-200">Date: {format(new Date(transaction.withdrawDate), 'dd/MM/yyyy')}</span>
                                     <span className="text-sm text-gray-300">Time: {transaction.time}</span>
                                 </div>
                             </li>
