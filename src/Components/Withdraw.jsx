@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import the useNavigate hook
 
 function Withdraw({ balance, cardNum, HandleBalance, sepndBalance, spendTransaction, spendTime, cashOutHistory }) {
     const [withdraw, setWithdraw] = useState('');
     const [card, setCard] = useState('');
     const [wtxn, wsetTxn] = useState('');
     const [time, setTime] = useState('');
+    const [showToggle, setShowToggle] = useState(false); // State to control the toggle visibility
+    const [withdrawAmount, setWithdrawAmount] = useState(0); // State to store the withdrawn amount
+
+    const navigate = useNavigate();
 
     // Function to set the transaction time
     function WithdrawTime() {
@@ -20,8 +25,6 @@ function Withdraw({ balance, cardNum, HandleBalance, sepndBalance, spendTransact
         wsetTxn(Txn);
         spendTransaction(Txn);
     }
-
-
 
     // Function to handle amount input
     function WithdrawAmount(event) {
@@ -51,6 +54,10 @@ function Withdraw({ balance, cardNum, HandleBalance, sepndBalance, spendTransact
             return;
         }
 
+        if(cardNum == 'xxxx xxxx xxx xxxx'){
+            alert('Invalid card number');
+            return;
+        }
         // Check for sufficient balance
         if (withdrawAmount > balance) {
             alert('Insufficient balance');
@@ -65,7 +72,9 @@ function Withdraw({ balance, cardNum, HandleBalance, sepndBalance, spendTransact
         // Pass withdrawal history only after confirmation
         cashOutHistory(withdraw);
 
-        alert(`Successfully withdrawn: $${withdrawAmount}`);
+        // Show the toggle instead of alert
+        setWithdrawAmount(withdrawAmount);
+        setShowToggle(true); // Show the toggle
 
         // Reset fields
         setWithdraw('');
@@ -74,14 +83,25 @@ function Withdraw({ balance, cardNum, HandleBalance, sepndBalance, spendTransact
         setTime('');
     }
 
-        // Wrapper function to call both Transaction and WithdrawTime
-        function handleClick() {
-            Transaction();
-            WithdrawTime();
-            cashOutHistory()
-        }
+    // Wrapper function to call both Transaction and WithdrawTime
+    function handleClick() {
+        Transaction();
+        WithdrawTime();
+        cashOutHistory();
+    }
+
+    // Function to handle OK button click
+    const handleToggleClose = () => {
+        setShowToggle(false); // Hide the toggle
+    };
+
     return (
         <div className="h-[96vh] md:h-[85vh] w-[360px] rounded-3xl flex flex-col bg-gradient-to-r from-[#2D2A3D] to-[#47456C] shadow-lg">
+            <div className="translate-x-4 translate-y-4 ">
+                <button onClick={() => navigate('/home')} className="text-white text-4xl">
+                    <span className="material-symbols-outlined">arrow_back</span>
+                </button>
+            </div>
             <div className="px-6 py-8">
                 <h1 className="text-3xl text-white text-center font-semibold mb-4 animate-fade-in">WITHDRAW MONEY</h1>
                 <h1 className="text-white text-center text-lg mb-6">
@@ -120,6 +140,22 @@ function Withdraw({ balance, cardNum, HandleBalance, sepndBalance, spendTransact
                     </button>
                 </form>
             </div>
+
+            {/* Toggle for withdrawal confirmation */}
+            {showToggle && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-6 rounded-lg shadow-lg">
+                        <h2 className="text-lg font-bold">Withdrawal Successful</h2>
+                        <p className="mt-2">Successfully withdrawn: <strong>${withdrawAmount.toFixed(2)}</strong></p>
+                        <button
+                            onClick={handleToggleClose}
+                            className="mt-4 bg-blue-500 text-white rounded-md  w-full px-4 py-2 hover:bg-blue-600"
+                        >
+                            OK
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

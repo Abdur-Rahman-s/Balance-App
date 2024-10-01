@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
 import ProfileImg from "../assets/Profile.jpg";
 
 function Profile({ name, email, valid, myProfile, handleCardid }) {
     const [image, setImage] = useState(ProfileImg);
     const [cardid, setCardid] = useState('');
+    const navigate = useNavigate(); // Initialize the navigate function
 
     function CardNumber() {
         const parts = [2000, 3000, 4000, 5000].map(n => Math.ceil(Math.random() * n));
@@ -23,6 +25,16 @@ function Profile({ name, email, valid, myProfile, handleCardid }) {
 
     return (
         <div className="h-[96vh] md:h-[85vh] w-[360px] rounded-3xl flex flex-col items-center justify-center bg-gradient-to-r from-[#2A2A35] to-[#444464] shadow-2xl relative overflow-hidden">
+            {/* Back Arrow Button */}
+            <div className="absolute top-4 left-4">
+                <button
+                    onClick={() => navigate('/home')} // Navigate back to the home route
+                    className="text-white text-3xl transform transition-transform hover:scale-110"
+                >
+                    <span className="material-symbols-outlined">arrow_back</span>
+                </button>
+            </div>
+
             {/* Profile Title */}
             <div className="absolute top-10">
                 <h1 className="text-4xl font-extrabold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-[#F9B06D] to-[#F8E53F] animate-pulse">

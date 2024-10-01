@@ -9,10 +9,11 @@ body {
   background: linear-gradient(25deg, #865BF7, #AC47EE);
   margin: 0;
   height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
-.main-container{
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
+
+
