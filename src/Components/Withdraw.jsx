@@ -54,10 +54,11 @@ function Withdraw({ balance, cardNum, HandleBalance, sepndBalance, spendTransact
             return;
         }
 
-        if(cardNum == 'xxxx xxxx xxx xxxx'){
+        if(cardNum === 'xxxx xxxx xxx xxxx'){
             alert('Invalid card number');
             return;
         }
+
         // Check for sufficient balance
         if (withdrawAmount > balance) {
             alert('Insufficient balance');
@@ -95,6 +96,19 @@ function Withdraw({ balance, cardNum, HandleBalance, sepndBalance, spendTransact
         setShowToggle(false); // Hide the toggle
     };
 
+    // Function to format balance with trillions, billions, and millions
+    const formatBalance = (balance) => {
+        if (balance >= 1e12) {
+            return (balance / 1e12).toFixed(2) + "T"; // Format trillions
+        } else if (balance >= 1e9) {
+            return (balance / 1e9).toFixed(2) + "B"; // Format billions
+        } else if (balance >= 1e6) {
+            return (balance / 1e6).toFixed(2) + "M"; // Format millions
+        } else {
+            return balance.toFixed(2); // No formatting for smaller numbers
+        }
+    };
+
     return (
         <div className="h-[96vh] md:h-[85vh] w-[360px] rounded-3xl flex flex-col bg-gradient-to-r from-[#2D2A3D] to-[#47456C] shadow-lg">
             <div className="translate-x-4 translate-y-4 ">
@@ -105,7 +119,7 @@ function Withdraw({ balance, cardNum, HandleBalance, sepndBalance, spendTransact
             <div className="px-6 py-8">
                 <h1 className="text-3xl text-white text-center font-semibold mb-4 animate-fade-in">WITHDRAW MONEY</h1>
                 <h1 className="text-white text-center text-lg mb-6">
-                    Current balance: <span className="font-bold">${balance.toFixed(2)}</span>
+                    Current balance: <span className="font-bold">${formatBalance(balance)}</span>
                 </h1>
                 <form className="space-y-6" onSubmit={handleWithdraw}>
                     <div className="relative">
@@ -149,7 +163,7 @@ function Withdraw({ balance, cardNum, HandleBalance, sepndBalance, spendTransact
                         <p className="mt-2">Successfully withdrawn: <strong>${withdrawAmount.toFixed(2)}</strong></p>
                         <button
                             onClick={handleToggleClose}
-                            className="mt-4 bg-blue-500 text-white rounded-md  w-full px-4 py-2 hover:bg-blue-600"
+                            className="mt-4 bg-blue-500 text-white rounded-md w-full px-4 py-2 hover:bg-blue-600"
                         >
                             OK
                         </button>

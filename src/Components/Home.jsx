@@ -7,6 +7,20 @@ import addmoney from "../assets/fav.jpg";
 import History from "../assets/HIstory.jpg";
 import { Link } from "react-router-dom";
 
+// Helper function to format balance
+const formatBalance = (balance) => {
+    if (balance >= 1e12) {
+        return (balance / 1e12).toFixed(2) + "T"; // Format trillions
+    } else if (balance >= 1e9) {
+        return (balance / 1e9).toFixed(2) + "B"; // Format billions
+    } else if (balance >= 1e6) {
+        return (balance / 1e6).toFixed(2) + "M"; // Format millions
+    } else {
+        return balance.toFixed(2); // No formatting for smaller numbers
+    }
+};
+
+
 const UserProfile = ({ image, name }) => (
     <Link to={'/profile'}>
         <img
@@ -44,23 +58,24 @@ const CardSection = ({ balance, cardNum, spend }) => (
             <div className="flex text-center gap-10 pt-3 items-center text-white">
                 <div>
                     <p className="text-sm">My balance</p>
-                    <h1 className="text-xl font-bold">${balance.toFixed(2)}</h1>
+                    <h1 className="text-xl font-bold">${formatBalance(balance)}</h1>
                 </div>
                 <p className="text-md tracking-wide">{cardNum}</p>
             </div>
             <div className="flex text-center gap-20 pt-3 items-center text-white">
                 <div>
                     <p className="text-sm">Spend</p>
-                    <h3 className="text-xl font-semibold">- ${spend}</h3>
+                    <h3 className="text-xl font-semibold">- ${formatBalance(spend)}</h3>
                 </div>
                 <div>
                     <p className="text-sm">Profit</p>
-                    <h3 className="text-xl font-semibold">+ ${balance.toFixed(2)}</h3>
+                    <h3 className="text-xl font-semibold">+ ${formatBalance(balance)}</h3>
                 </div>
             </div>
         </div>
     </div>
 );
+;
 
 const Button = ({ to, iconSrc, text, gradientFrom, gradientTo }) => (
     <Link to={to}>
